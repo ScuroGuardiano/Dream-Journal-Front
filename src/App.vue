@@ -6,14 +6,10 @@
 </template>
 
 <script>
-import NotLoggedIn from './components/NotLoggedIn.vue';
-import LoggedIn from './components/LoggedIn.vue';
 import Header from './components/Header.vue';
 export default {
   components: {
     'darkheader': Header,
-    'notloggedin': NotLoggedIn,
-    'loggedin': LoggedIn
   },
   name: 'app',
   data () {

@@ -1,5 +1,6 @@
 <template>
 <div id="dashboard">
+    <h1>Welcome to your Dream Journal!</h1>
     <button v-on:click.prevent="goToNewDream">New Dream</button>
     <button>Account Settings</button>
     <button v-on:click.prevent="logout">Logout</button>
@@ -29,9 +30,6 @@ export default {
     }
   },
   methods: {
-      logout() {
-          this.$emit('loggedOut');
-      },
       viewAllDreams() {
           this.$router.push('/dreams');
       },
@@ -59,6 +57,16 @@ export default {
 </script>
 
 <style scoped>
+    h1 {
+        color: white;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        text-align: center;
+    }
+    #dashboard {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
     .dream {
         width: 50%;
         margin-left: auto;

@@ -33,18 +33,22 @@ export default {
           if(this.password !== this.confirmPassword) {
               return alert("Passwords doesn't match");
           }
+          if(this.password.length < 8) {
+              return alert("Password is too short!");
+          }
           this.$http.post(config.SERVER_ADRESS + '/api/register', {
               email: this.email,
               password: this.password
           })
           .then(data => {
-              console.log(data);
-              if(data.status == 200) {
-                  this.$emit('loggedIn', { user: data.body.result.userEmail });
-              }
+            this.$store.dispatch('logIn');
+            //TODO: Navigate to '/', but when dreams on backend are done xDD
           })
           .catch(err => {
-              console.log(err);
+              if(err.body && err.body.error) {
+                  alert(err.body.error);
+              }
+              else alert("Uknown error, try again later");
           });
       }
   }

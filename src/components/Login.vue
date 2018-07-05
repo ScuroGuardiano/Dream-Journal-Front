@@ -28,13 +28,14 @@ export default {
               password: this.password
           })
           .then(data => {
-              console.log(data);
-              if(data.status == 200) {
-                  this.$emit('loggedIn', { user: data.body.result.userEmail });
-              }
+            this.$store.dispatch('logIn');
+            alert('Logged in!');
           })
           .catch(err => {
-              console.log(err);
+            if(err.body && err.body.error) {
+                alert(err.body.error);
+            }
+            else alert("Uknown error, try again later");
           });
       }
   }
