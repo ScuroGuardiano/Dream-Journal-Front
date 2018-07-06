@@ -19,6 +19,7 @@
 
 <script>
 import config from './../config';
+import handle401error from '../mixins/handle401error';
 export default {
   name: 'logged-in',
   props: ['user'],
@@ -35,24 +36,36 @@ export default {
       },
       goToNewDream() {
           this.$router.push('/newdream');
+      },
+      logout() {
+          window.localStorage.removeItem('sessionToken');
+          this.$router.push('/login');
       }
   },
   created() {
       this.$http.get(config.SERVER_ADRESS + '/api/dreams', {
-          params: { limit: 4, contentLimit: 120 }
+          params: { limit: 4, contentLimit: 120 },
+          headers: { 'X-Dark-Token': window.localStorage.getItem('sessionToken') || "" }
       })
       .then(data => {
-          if(data.body.result.length) {
-              this.dreams = data.body.result
+          if(data.body.dreams.length) {
+              this.dreams = data.body.dreams;
           }
           else {
               this.dreamsMessage = "You have no dreams yet";
           }
+          if(data.body.token)
+            window.localStorage.setItem('sessionToken', data.body.token);
       })
       .catch(err => {
-          this.error = "Some error while trying to download dreams";
+          console.log(err);
+          if(err.status && err.status === 401) {
+              this.handle401Error(err);
+          }
+          else this.error = "Some error while trying to download dreams";
       });
-  }
+  },
+  mixins: [handle401error]
 }
 </script>
 

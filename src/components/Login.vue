@@ -28,8 +28,11 @@ export default {
               password: this.password
           })
           .then(data => {
+            console.dir(data);
             this.$store.dispatch('logIn');
-            alert('Logged in!');
+            if(data.body.token)
+                window.localStorage.setItem('sessionToken', data.body.token);
+            this.$router.push('/');
           })
           .catch(err => {
             if(err.body && err.body.error) {

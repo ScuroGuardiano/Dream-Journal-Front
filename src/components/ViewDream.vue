@@ -20,6 +20,7 @@
 
 <script>
 import config from './../config';
+import handle401error from '../mixins/handle401error';
 export default {
   name: 'viewdream',
   data () {
@@ -39,13 +40,21 @@ export default {
       deleteDream() {
           let sure = confirm('Are you sure?');
           if(sure)
-            this.$http.delete(config.SERVER_ADRESS + '/api/delete-dream', {
-                body: { id: this.id }
+            this.$http.delete(config.SERVER_ADRESS + `/api/dream/${this.id}/delete`, {
+                headers: { 'X-Dark-Token': window.localStorage.getItem('sessionToken') || "" }
             })
             .then(data => {
+                if(data.body.token)
+                    window.localStorage.setItem('sessionToken', data.body.token);
                 this.$router.push('/');
             })
             .catch(err => {
+                if(err.status) {
+                    if(err.status === 404)
+                        this.$router.push('/');
+                    if(err.status === 401)
+                        this.handle401Error(err);
+                }
                 alert("Some error occured, try again later " + JSON.stringify(err, 4));
             })
       }
@@ -53,21 +62,30 @@ export default {
   created() {
         if(!this.id)
             return this.$router.push('/');
-        this.$http.get('http://localhost:3000/api/dream/' + this.id)
+        this.$http.get('http://localhost:3000/api/dream/' + this.id, {
+            headers: {
+                "X-Dark-Token": window.localStorage.getItem('sessionToken') || ""
+            }
+        })
         .then(data => {
-            this.dream = data.body.result;
+            this.dream = data.body.dream;
+            if(data.body.token)
+                window.localStorage.setItem('sessionToken', data.body.token);
         })
         .catch(err => {
             if(err.status) {
-                if(err.status == 404)
-                    this.error = '404'
+                if(err.status === 404)
+                    this.error = '404';
+                if(err.status === 401)
+                    this.handle401Error();
             }
             else {
                 console.log(err);
                 this.$router.push('/');
             }
         })
-  }
+  },
+  mixins: [handle401error]
 }
 </script>
 

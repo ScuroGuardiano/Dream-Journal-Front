@@ -42,7 +42,9 @@ export default {
           })
           .then(data => {
             this.$store.dispatch('logIn');
-            //TODO: Navigate to '/', but when dreams on backend are done xDD
+            if(data.body.token)
+                window.localStorage.setItem('sessionToken', data.body.token);
+            this.$router.push('/');
           })
           .catch(err => {
               if(err.body && err.body.error) {

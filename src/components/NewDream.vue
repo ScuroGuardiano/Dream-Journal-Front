@@ -15,6 +15,7 @@
 
 <script>
 import config from './../config';
+import handle401Error from './../mixins/handle401error';
 export default {
   name: 'newdream',
   data () {
@@ -34,21 +35,28 @@ export default {
           if(!this.dream)
             return alert('Enter your dream description before sending!');
           this.$http.post(config.SERVER_ADRESS + '/api/add-dream', {
-              dreamTitle: this.dreamTitle,
-              dream: this.dream,
-              dreamDate: Date.now()
-          })
+                dreamTitle: this.dreamTitle,
+                dream: this.dream,
+                dreamDate: Date.now()
+          }, { headers: { 'x-dark-token': window.localStorage.getItem('sessionToken') || "" } })
           .then(data => {
-              this.$router.push('/dream/' + data.body.result.id);
+              this.$router.push('/dream/' + data.body.dream.id);
+              if(data.body.token)
+                window.localStorage.setItem('sessionToken', data.body.token);
           })
           .catch(err => {
-              alert('Some error occured, try again later');
+              if(err.status && err.status === 401) {
+                  alert("You're not logged in!")
+                  this.handle401Error(err);
+              }
+              else alert('Some error occured, try again later');
           })
       }
   },
   created() {
 
-  }
+  },
+  mixins: [handle401Error]
 }
 </script>
 
