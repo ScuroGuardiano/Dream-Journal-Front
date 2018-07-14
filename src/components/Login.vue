@@ -29,7 +29,7 @@ export default {
           })
           .then(data => {
             console.dir(data);
-            this.$store.dispatch('logIn');
+            console.dir(data.body);
             if(data.body.token)
                 window.localStorage.setItem('sessionToken', data.body.token);
             this.$router.push('/');

@@ -1,7 +1,7 @@
 <template>
   <main>
     <darkheader></darkheader>
-    <router-view v-on:loggedIn='login($event)' v-on:loggedOut='logout'></router-view>
+    <router-view></router-view>
   </main>
 </template>
 
@@ -14,22 +14,11 @@ export default {
   name: 'app',
   data () {
     return {
-      title: "Scuro Dream Journal",
-      loggedIn: false,
-      user: ''
+      title: "Scuro Dream Journal"
     }
   },
   methods: {
-    login(data) {
-      this.loggedIn = true;
-      this.user = data.user;
-      this.$router.push('/');
-    },
-    logout() {
-      this.loggedIn = false;
-      this.user = '';
-      this.$router.push('/login');
-    }
+
   }
 }
 </script>

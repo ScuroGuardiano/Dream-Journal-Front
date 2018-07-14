@@ -41,7 +41,6 @@ export default {
               password: this.password
           })
           .then(data => {
-            this.$store.dispatch('logIn');
             if(data.body.token)
                 window.localStorage.setItem('sessionToken', data.body.token);
             this.$router.push('/');

@@ -38,6 +38,9 @@ export default {
           this.$router.push('/newdream');
       },
       logout() {
+          this.$http.get(config.SERVER_ADRESS + '/api/logout', {
+              headers: { 'X-Dark-Token': window.localStorage.getItem('sessionToken') || "" }
+          }).catch(err => 'fuck you');
           window.localStorage.removeItem('sessionToken');
           this.$router.push('/login');
       }
